@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 
 const port = 27017                          //defining the port
 const app = express()                       //initialising express
-app.use(bodyParser.json({ extended: false }));
+app.use(bodyParser.json({ extended: false })); // using the body-parser module
 
 //connecting to database
 mongoose.connect("mongodb://localhost:27017/project", { 
@@ -50,6 +50,7 @@ app.post('/register', (req,res)=>{
     res.send("user data stored")
 })
 
+
 app.post('/login',(req, res)=>{
     User.findOne({email: req.body.email},(err,user)=>{
         if(!user) return res.send("No user found, register first!")
@@ -57,7 +58,8 @@ app.post('/login',(req, res)=>{
             const passIsValid = bcrypt.compare(req.body.password, user.password)
             if (!passIsValid) return res.send("Invalid password")
             else{
-                res.send(`Welcome ${user.name}`)
+                const token = jwt.sign({id:user._id},"movie",{ expiresIn:3600})//using json web tokens 
+                res.send(`Welcome ${user.name} your token is ${token}`)
             }
         }
 })
