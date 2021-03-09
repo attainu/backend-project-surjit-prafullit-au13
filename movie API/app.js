@@ -63,16 +63,13 @@ app.post('/login',(req, res)=>{
             const passIsValid = bcrypt.compare(req.body.password, user.password) //comparing the password
             if (!passIsValid) return res.send("Invalid password")
             else{
-<<<<<<< HEAD
                 const token = jwt.sign({id:user._id},"movie",{ expiresIn:3600})
                 User.findOneAndUpdate({email: req.body.email}, {$set: {is_active: true, key: token}},function(err,result){
                     if(err){
                         console.log(err)
                     } 
                 })
-=======
-                const token = jwt.sign({id:user._id},"movie",{ expiresIn:3600})//using json web tokens 
->>>>>>> 8baf8240092c0b0c5e651a71b4a9f2501ac65121
+
                 res.send(`Welcome ${user.name} your token is ${token}`)
             }
         }
