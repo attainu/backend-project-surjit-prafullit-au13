@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken')
 
 const port = 27017                          //defining the port
 const app = express()                       //initialising express
-app.use(bodyParser.json({ extended: false }));
+app.use(bodyParser.json({ extended: false })); // using the body-parser module
 
 //connecting to database
 mongoose.connect("mongodb://localhost:27017/project", { 
@@ -55,6 +55,7 @@ app.post('/register', (req,res)=>{
     res.send("user registered successfully")
 })
 
+
 app.post('/login',(req, res)=>{
     User.findOne({email: req.body.email},(err,user)=>{
         if(!user) return res.send("No user found, register first!")
@@ -62,12 +63,16 @@ app.post('/login',(req, res)=>{
             const passIsValid = bcrypt.compare(req.body.password, user.password) //comparing the password
             if (!passIsValid) return res.send("Invalid password")
             else{
+<<<<<<< HEAD
                 const token = jwt.sign({id:user._id},"movie",{ expiresIn:3600})
                 User.findOneAndUpdate({email: req.body.email}, {$set: {is_active: true, key: token}},function(err,result){
                     if(err){
                         console.log(err)
                     } 
                 })
+=======
+                const token = jwt.sign({id:user._id},"movie",{ expiresIn:3600})//using json web tokens 
+>>>>>>> 8baf8240092c0b0c5e651a71b4a9f2501ac65121
                 res.send(`Welcome ${user.name} your token is ${token}`)
             }
         }
