@@ -77,7 +77,10 @@ app.post('/login',(req, res)=>{
 })
 //creating movie route
 app.post('/movie',(req,res)=>{
-    jwt.verify(req.body.key, "movie", (err, data)=>{
+    jwt.verify(req.headers["token"], "movie", (err, data)=>{
+        if (err){
+            res.send("Unauthorised user!")
+        }
         User.findOne({_id: data.id},(err,user)=>{
             if(err){
                 throw err
@@ -102,7 +105,8 @@ app.post('/movie',(req,res)=>{
 })
 //creating rating route
 app.post('/rating', (req,res)=>{
-    jwt.verify(req.body.key, "movie", (err, data)=>{
+    jwt.verify(req.headers["token"], "movie", (err, data)=>{
+       
         User.findOne({_id: data.id},(err,user)=>{
             if(err){
                 throw err
