@@ -6,11 +6,13 @@ const path = require('path');
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 
 
 const port = 27017                          //defining the port
 const app = express()                       //initialising express
 app.use(bodyParser.json({ extended: false })); // using the body-parser module
+app.use(cookieParser())
 
 //connecting to database
 mongoose.connect("mongodb://localhost:27017/project", { 
@@ -69,7 +71,7 @@ app.post('/login',(req, res)=>{
                         console.log(err)
                     } 
                 })
-
+                res.cookie("token",token)
                 res.send(`Welcome ${user.name} your token is ${token}`)
             }
         }
@@ -77,7 +79,7 @@ app.post('/login',(req, res)=>{
 })
 //creating movie route
 app.post('/movie',(req,res)=>{
-    jwt.verify(req.headers["token"], "movie", (err, data)=>{
+    jwt.verify(req.cookies.token, "movie", (err, data)=>{
         if (err){
             res.send("Unauthorised user!")
         }
@@ -105,7 +107,7 @@ app.post('/movie',(req,res)=>{
 })
 //creating rating route
 app.post('/rating', (req,res)=>{
-    jwt.verify(req.headers["token"], "movie", (err, data)=>{
+    jwt.verify(req.cookies.token, "movie", (err, data)=>{
        
         User.findOne({_id: data.id},(err,user)=>{
             if(err){
