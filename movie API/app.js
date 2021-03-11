@@ -18,6 +18,7 @@ const app = express()                       //initialising express
 
 //defining login and register routes
 // app.post('/register', (req,res)=>{
+//     console.log("Good Afternoon")
 //     bcrypt.hash(req.body.password, 10,function(err, hash){    //hashing the password using bcrypt
 //         User.create({
 //             name: req.body.name,
