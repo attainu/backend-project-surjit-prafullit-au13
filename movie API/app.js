@@ -81,7 +81,7 @@ app.post('/login',(req, res)=>{
 app.post('/movie',(req,res)=>{
     jwt.verify(req.cookies.token, "movie", (err, data)=>{
         if (err){
-            res.send("Unauthorised user!")
+            res.send("Unauthorised user! Register/Login")
         }
         User.findOne({_id: data.id},(err,user)=>{
             if(err){
@@ -108,6 +108,9 @@ app.post('/movie',(req,res)=>{
 //creating rating route
 app.post('/rating', (req,res)=>{
     jwt.verify(req.cookies.token, "movie", (err, data)=>{
+        if (err){
+            res.send("Login/Register to get access!")
+        }
        
         User.findOne({_id: data.id},(err,user)=>{
             if(err){
@@ -139,8 +142,6 @@ app.post('/rating', (req,res)=>{
                                     movie
                                 })
                             }
-                        
-
                         })
                     })
                 }
@@ -149,7 +150,60 @@ app.post('/rating', (req,res)=>{
     })
 })
 
-//creating server
+
+//creating s
+app.post('/admin', (req,res)=>{
+    jwt.verify(req.cookies.token, "movie", (err, data)=>{
+        if (err){
+            res.send("Login/Register to get access!")
+        }
+        User.findOne({_id: data.id},(err,user)=>{
+            if(err){
+                throw err
+            }
+            else{
+                if(user.is_admin){
+                    const operation = req.body.operation
+                    if(operation == "add_movie"){
+                        Movie.create({
+                            name: req.body.name,
+                            rating: req.body.rating,
+                            year: req.body.year,
+                            genre: req.body.genre,
+                            numVotes: req.body.numVotes
+                        })
+                        res.send("Successfully added movie")
+                    } else if(operation == "delete_movie"){
+                        Movie.findOne({name: req.body.name},function(err,movie){
+                            if(movie == null){
+                                res.send("Movie not found to delele!")
+                            }
+                            else{
+                                Movie.deleteOne({'name':movie.name},function(err, result){
+                                    res.send("Successfully deleted....")
+                                })
+                            }
+                        
+                        })
+                } else{
+                    res.status(404) 
+                    res.send("Unauthorized..... No Hackers allowed.")
+                }
+                
+            }
+        }
+        
+    })
+})
+})
+
+
+app.post('/logout', (req,res)=>{
+    jwt.verify(req.cookies.token, "movie", (err, data)=>{
+        res.clearCookie('token');
+        res.send('User Logged out');
+    })
+})
 app.listen(port,()=>{
     console.log(`Listening to port http://localhost:${port}/login`)
 })
