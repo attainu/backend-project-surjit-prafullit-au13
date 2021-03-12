@@ -7,5 +7,5 @@ const Controller = require('./controller/route');
 app.use('/', Controller);
 
 app.listen(config.port,()=>{
-    console.log(`Listening to port http://localhost:${config.port}/login`)
+    console.log(`Listening to port http://localhost:${config.port}`)
 })

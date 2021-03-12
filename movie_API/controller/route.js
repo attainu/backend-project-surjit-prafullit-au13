@@ -58,15 +58,17 @@ router.post('/movie',(req,res)=>{
             res.send("Login/Register to get access!")
         }
         else{
-            Movie.findOne({name: req.body.movie_name},{_id:0,numVotes:0},(err,movie)=>{
+            Movie.findOne({name: req.body.movie_name},{_id:0,numVotes:0,__v:0},(err,movie)=>{
                 if(movie == null){
                     res.send("Movie not found!")
                 }
-                Movie.find({"genre":movie.genre,"name":{$ne:movie.name}},{_id:0,numVotes:0}).sort({"rating":-1}).exec(function(err,model){
-                    res.json({"your movie":movie,
-                                "Movie Recomendation":model    //giving movie recomendation
-                            })
-                })                        
+                else{
+                    Movie.find({"genre":movie.genre,"name":{$ne:movie.name}},{_id:0,numVotes:0,__v:0}).sort({"rating":-1}).exec(function(err,model){
+                        res.json({"your movie":movie,
+                                    "Movie Recomendation":model    //giving movie recomendation
+                                })
+                    })
+                }                        
             })
         }
     })
@@ -93,7 +95,7 @@ router.post('/rating', (req,res)=>{
                             throw err
                         }
                     })
-                    Movie.findOne({name: req.body.movie_name},{_id:0},(err,movie)=>{
+                    Movie.findOne({name: req.body.movie_name},{_id:0,__v:0},(err,movie)=>{
                         if(err){
                             throw err
                         }
