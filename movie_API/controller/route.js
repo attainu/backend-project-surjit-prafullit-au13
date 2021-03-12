@@ -50,7 +50,7 @@ router.post('/login',(req, res)=>{
                     } 
                 })
                 res.cookie("token",token)
-                res.send(`Welcome ${user.name} your token is ${token}`)
+                res.send(`Welcome ${user.name}`)
             }
         }
 })
