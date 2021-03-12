@@ -33,7 +33,6 @@ router.post('/register', (req,res)=>{
             res.send("user registered successfully")
         }
 })
-    
 })
 
 
