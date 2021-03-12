@@ -17,16 +17,23 @@ router.use(cookieParser())
 
 
 router.post('/register', (req,res)=>{
-    console.log("Hello world...")
-    bcrypt.hash(req.body.password, 10,function(err, hash){    //hashing the password using bcrypt
-        User.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: hash,
-            is_admin: req.body.is_admin   
-        })
+    User.findOne({email: req.body.email},(err,user)=>{
+        if(user){
+            res.send("User already registered!")
+        }
+        else{
+            bcrypt.hash(req.body.password, 10,function(err, hash){    //hashing the password using bcrypt
+                User.create({
+                    name: req.body.name,
+                    email: req.body.email,
+                    password: hash,
+                    is_admin: req.body.is_admin   
+                })
+            })
+            res.send("user registered successfully")
+        }
 })
-    res.send("user registered successfully")
+    
 })
 
 
